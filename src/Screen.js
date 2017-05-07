@@ -14,6 +14,9 @@ export default class Screen extends Component<void, Props, void> {
   eventPropagated: boolean = false;
 
   onTouch = (event: any) => {
+    // Passive event listener doesn't allow you to call e.preventDefault()/e.stopPropagation() in
+    // their handlers. This means that if you want to handle both touchstart and mousedown events
+    // you must manually stop the propagation of the mousedown event on mobile.
     if (event.type === 'touchstart') {
       this.eventPropagated = true;
     } else {
@@ -26,6 +29,10 @@ export default class Screen extends Component<void, Props, void> {
   };
 
   componentDidMount() {
+    // Instead of attacching the onTouchStart and onMouseDown handlers directly to the React
+    // components I'm attaching them as passive event listeners to prevent the touch delay.
+    // More info here: https://github.com/WICG/EventListenerOptions/blob/gh-pages/explainer.md
+    // and here: https://github.com/facebook/react/issues/6436
     this.containerRef.addEventListener('touchstart', this.onTouch, { passive: true });
     this.containerRef.addEventListener('mousedown', this.onTouch, { passive: true });
   }
