@@ -14,7 +14,7 @@ export default class Screen extends Component<void, Props, void> {
   eventPropagated: boolean = false;
 
   onTouch = (event: any) => {
-    // Passive event listener doesn't allow you to call e.preventDefault()/e.stopPropagation() in
+    // Passive event listeners disallow calling e.preventDefault()/e.stopPropagation() in
     // their handlers. This means that if you want to handle both touchstart and mousedown events
     // you must manually stop the propagation of the mousedown event on mobile.
     if (event.type === 'touchstart') {
