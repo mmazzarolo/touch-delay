@@ -1,5 +1,6 @@
 /* @flow */
 import React, { Component } from 'react';
+import Screen from './Screen';
 import './App.css';
 
 type State = {
@@ -19,64 +20,56 @@ export default class App extends Component<void, {}, State> {
     lastScore: null,
   };
 
+  componentDidUpdate(prevProps: Props, prevState: State) {
+    if (prevState.currentScreen !== this.state.currentScreen) {
+      if (this.state.currentScreen === 'READY' || this.state.currentScreen === 'TOO_FAST') {
+        clearTimeout(this.showGoScreenTimer);
+        this.showGoScreenTimer = null;
+      } else if (this.state.currentScreen === 'GO') {
+        this.goScreenTime = Date.now();
+      }
+    }
+  }
+
   renderReadyScreen = () => {
     const handleClick = (event: any) => {
-      event.preventDefault();
       const delay = randomNumFromInterval(1000, 4000);
       this.setState({ currentScreen: 'SET' });
       this.showGoScreenTimer = setTimeout(() => {
-        this.setState({ currentScreen: 'GO' }, () => {
-          this.goScreenTime = Date.now();
-        });
+        this.setState({ currentScreen: 'GO' });
       }, delay);
     };
+    const subtitle = this.state.lastScore ? `${this.state.lastScore} MS` : undefined;
     return (
-      <div className={'Ready-container'} onMouseDown={handleClick} onTouchStart={handleClick}>
-        <h1>{'READY'}</h1>
-        {this.state.lastScore && <h1>{`${this.state.lastScore} MS`}</h1>}
-      </div>
+      <Screen
+        onTouch={handleClick}
+        title={'READY'}
+        subtitle={subtitle}
+        backgroundColor={'#EF6C00'}
+      />
     );
   };
 
   renderSetScreen = () => {
     const handleClick = (event: any) => {
-      event.preventDefault();
-      clearTimeout(this.showGoScreenTimer);
-      this.showGoScreenTimer = null;
       this.setState({ currentScreen: 'TOO_FAST' });
     };
-    return (
-      <div className={'Set-container'} onMouseDown={handleClick} onTouchStart={handleClick}>
-        <h1>{'SET'}</h1>
-      </div>
-    );
+    return <Screen onTouch={handleClick} title={'SET'} backgroundColor={'#E53935'} />;
   };
 
   renderGoScreen = () => {
     const handleClick = (event: any) => {
-      event.preventDefault();
       const score = Date.now() - this.goScreenTime;
-      clearTimeout(this.showGoScreenTimer);
-      this.showGoScreenTimer = null;
       this.setState({ currentScreen: 'READY', lastScore: score });
     };
-    return (
-      <div className={'Go-container'} onTouchStart={handleClick} onMouseDown={handleClick}>
-        <h1>{'GO!'}</h1>
-      </div>
-    );
+    return <Screen onTouch={handleClick} title={'GO!'} backgroundColor={'#009688'} />;
   };
 
   renderTooFastScreen = () => {
     const handleClick = (event: any) => {
-      event.preventDefault();
       this.setState({ currentScreen: 'READY', lastScore: null });
     };
-    return (
-      <div className={'TooFast-container'} onMouseDown={handleClick} onTouchStart={handleClick}>
-        <h1>{'TOO FAST!'}</h1>
-      </div>
-    );
+    return <Screen onTouch={handleClick} title={'TOO FAST'} backgroundColor={'#4285F4'} />;
   };
 
   render() {

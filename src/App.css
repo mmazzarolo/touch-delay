@@ -1,49 +1,13 @@
 .App-container {
   display: flex;
-  font-size: 60px;
+  font-size: 40px;
   width: 100%;
   height: 100%;
   color: white;
+  touch-action: none;
 }
 
 .App-container h1 {
   user-select: none;
   margin: 10px;
-}
-
-.Ready-container {
-  display: flex;
-  width: 100%;
-  height: 100%;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  background-color: #EF6C00;
-}
-
-.Set-container {
-  display: flex;
-  width: 100%;
-  height: 100%;
-  justify-content: center;
-  align-items: center;
-  background-color: #EB3719;
-}
-
-.Go-container {
-  display: flex;
-  width: 100%;
-  height: 100%;
-  justify-content: center;
-  align-items: center;
-  background-color: #009688;
-}
-
-.TooFast-container {
-  display: flex;
-  width: 100%;
-  height: 100%;
-  justify-content: center;
-  align-items: center;
-  background-color: #4285F4;
 }
